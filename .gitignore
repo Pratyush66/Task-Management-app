@@ -54,3 +54,6 @@ frontend/.env.local
 *.swo
 .DS_Store
 Thumbs.db
+
+INTERVIEW_GUIDE.md
+LOCAL_PRIVATE_INTERVIEW_PREP.md
