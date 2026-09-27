@@ -131,11 +131,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Google OAuth Login
   const signInWithGoogle = async () => {
     if (!supabase || !isSupabaseConfigured) {
-      alert(
-        'Supabase is not yet configured with valid credentials in .env.local.\n\n' +
-        'For evaluation and testing, you can use the "Continue with Demo Account" button below.'
+      throw new Error(
+        'Supabase is not configured yet with valid credentials in .env.local. Please provide your Supabase URL & Anon Key, or use the Demo Account to test immediately.'
       );
-      return;
     }
 
     const redirectUrl = `${window.location.origin}/auth/callback`;
