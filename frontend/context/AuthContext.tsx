@@ -12,6 +12,8 @@ interface AuthContextType {
   loading: boolean;
   isDemoUser: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, pass: string) => Promise<void>;
+  signUpWithEmail: (email: string, pass: string, fullName: string) => Promise<void>;
   signInWithDemo: () => void;
   signOut: () => Promise<void>;
 }
@@ -154,6 +156,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Email / Password Login (via Supabase)
+  const signInWithEmail = async (email: string, pass: string) => {
+    if (!supabase || !isSupabaseConfigured) {
+      throw new Error('Supabase client is not configured.');
+    }
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: pass,
+    });
+    if (error) {
+      throw error;
+    }
+    if (data.session) {
+      setUser(data.user);
+      setToken(data.session.access_token);
+      setIsDemoUser(false);
+      try {
+        const synced = await api.syncProfile(data.session.access_token, data.user);
+        setProfile(synced);
+      } catch (err) {
+        console.warn('Sync profile warning:', err);
+      }
+    }
+  };
+
+  // Email / Password Sign Up (via Supabase)
+  const signUpWithEmail = async (email: string, pass: string, fullName: string) => {
+    if (!supabase || !isSupabaseConfigured) {
+      throw new Error('Supabase client is not configured.');
+    }
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: pass,
+      options: {
+        data: {
+          full_name: fullName,
+          name: fullName,
+        },
+      },
+    });
+    if (error) {
+      throw error;
+    }
+    if (data.session) {
+      setUser(data.user);
+      setToken(data.session.access_token);
+      setIsDemoUser(false);
+      try {
+        const synced = await api.syncProfile(data.session.access_token, data.user);
+        setProfile(synced);
+      } catch (err) {
+        console.warn('Sync profile warning:', err);
+      }
+    }
+  };
+
   // Demo Login (Instant evaluation)
   const signInWithDemo = () => {
     if (typeof window !== 'undefined') {
@@ -189,6 +247,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loading,
         isDemoUser,
         signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
         signInWithDemo,
         signOut,
       }}
