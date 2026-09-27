@@ -252,10 +252,6 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## 🎯 Technical Interview Preparation
+## 📄 License & Summary
 
-A comprehensive, deep-dive interview preparation guide is provided in [`INTERVIEW_GUIDE.md`](file:///c:/interview%20assignment/Hair_drama_tech/Task-Management-app/INTERVIEW_GUIDE.md). It details:
-- Complete architectural rationale and design trade-offs
-- Detailed explanations of Google OAuth 2.0 PKCE and JWT validation
-- Why `ThreadPoolExecutor` is used for Gmail notifications vs Celery
-- 12 in-depth technical questions and model answers
+This project is built for distributed task management, team collaboration, and automated notification delivery. Licensed under the MIT License.
